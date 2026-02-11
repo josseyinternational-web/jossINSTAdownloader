@@ -49,22 +49,15 @@ async def handle_instagram(update: Update, context: ContextTypes.DEFAULT_TYPE):
             is_video = info.get('duration', 0) > 0 or file_path.endswith(('.mp4', '.mkv'))
             if is_video:
                 await msg.edit_text("📤 Sending video...")
-                await update.message.reply_video(
-                    open(file_path, 'rb'),
-                    caption=f"🎥 {info.get('title', 'Instagram Video')}",
-                    supports_streaming=True
-                )
+                await update.message.reply_video(open(file_path, 'rb'), caption=f"🎥 {info.get('title', 'Video')}", supports_streaming=True)
             else:
                 await msg.edit_text("📤 Sending photo...")
-                await update.message.reply_photo(
-                    open(file_path, 'rb'),
-                    caption=f"📸 {info.get('title', 'Instagram Photo')}"
-                )
+                await update.message.reply_photo(open(file_path, 'rb'), caption=f"📸 {info.get('title', 'Photo')}")
 
         await msg.edit_text("🎉 Done!")
 
     except Exception as e:
-        await msg.edit_text(f"❌ Failed: {str(e)[:80]}")
+        await msg.edit_text(f"❌ {str(e)[:80]}")
 
 if __name__ == '__main__':
     app = Application.builder().token(TOKEN).build()
