@@ -35,21 +35,18 @@ async def handle_instagram(update: Update, context: ContextTypes.DEFAULT_TYPE):
                 'outtmpl': os.path.join(tmpdir, '%(id)s.%(ext)s'),
                 'quiet': True,
                 'no_warnings': True,
-                'format': 'bv[height<=1080]+ba/b[height<=1080]/best',  # best available
+                'format': 'bv[height<=1080]+ba/b[height<=1080]/best',
             }
             with yt_dlp.YoutubeDL(ydl_opts) as ydl:
                 info = ydl.extract_info(text, download=True)
                 file_path = ydl.prepare_filename(info)
 
-            # Fix .webm → .mp4
             if file_path.endswith('.webm'):
                 mp4_path = file_path.replace('.webm', '.mp4')
                 os.rename(file_path, mp4_path)
                 file_path = mp4_path
 
-            # Detect if it's a video or photo
             is_video = info.get('duration', 0) > 0 or file_path.endswith(('.mp4', '.mkv'))
-
             if is_video:
                 await msg.edit_text("📤 Sending video...")
                 await update.message.reply_video(
